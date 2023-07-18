@@ -1,0 +1,9 @@
+INSERT: thêm mới
+CTRL + SHIFT + F: tìm kiếm
+
+giữ shift để chọn nhiều
+
+//form
+ESC: đóng form
+CTRL + S: cất
+CTRL + SHIFT + S: cất và thêm 
