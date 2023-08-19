@@ -2,6 +2,10 @@ input::placeholder {
   font-style: italic;
 }
 
+.regular-text {
+  font-weight: 400;
+}
+
 .bold-text {
   font-weight: 700;
   color: black;
@@ -63,9 +67,26 @@ input::placeholder {
 }
 
 /* flex item */
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-content--center {
+  justify-content: center;
+}
+
 .flex-row {
   display: flex;
   align-items: center;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }
 
 /* padding */
@@ -79,6 +100,10 @@ input::placeholder {
 
 .m-r-13 {
   margin-right: 13px;
+}
+
+.m-r-8 {
+  margin-right: 8px;
 }
 
 .m-l-13 {

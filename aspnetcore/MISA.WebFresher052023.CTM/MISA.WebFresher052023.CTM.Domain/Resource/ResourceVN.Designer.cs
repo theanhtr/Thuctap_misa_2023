@@ -61,11 +61,119 @@ namespace MISA.WebFresher052023.CTM.Domain {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Đối tượng &lt;{0}&gt; đã tồn tại trong hệ thống..
+        /// </summary>
+        public static string Code_Exist {
+            get {
+                return ResourceManager.GetString("Code_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Đối tượng &lt;{0}&gt; không tồn tại trong hệ thống..
+        /// </summary>
+        public static string Code_Not_Exist {
+            get {
+                return ResourceManager.GetString("Code_Not_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ^[A-Z]+\d*-\d+$.
+        /// </summary>
+        public static string Code_Regex {
+            get {
+                return ResourceManager.GetString("Code_Regex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không thể xóa từ danh sách rỗng!.
+        /// </summary>
+        public static string Delete_Empty_Error {
+            get {
+                return ResourceManager.GetString("Delete_Empty_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phòng ban &lt;{0}&gt; đã tồn tại trong hệ thống..
+        /// </summary>
+        public static string Department_Exist {
+            get {
+                return ResourceManager.GetString("Department_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phòng ban &lt;{0}&gt; không tồn tại trong hệ thống..
+        /// </summary>
+        public static string Department_Not_Exist {
+            get {
+                return ResourceManager.GetString("Department_Not_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nhân viên &lt;{0}&gt; đã tồn tại trong hệ thống..
+        /// </summary>
+        public static string Employee_Exist {
+            get {
+                return ResourceManager.GetString("Employee_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nhân viên &lt;{0}&gt; không tồn tại trong hệ thống..
+        /// </summary>
+        public static string Employee_Not_Exist {
+            get {
+                return ResourceManager.GetString("Employee_Not_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mã nhân viên.
         /// </summary>
         public static string Excel_Employee_Code_Header_Name {
             get {
                 return ResourceManager.GetString("Excel_Employee_Code_Header_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tiêu đề &lt;{0}&gt; đã bị trùng..
+        /// </summary>
+        public static string Excel_Header_Duplicate {
+            get {
+                return ResourceManager.GetString("Excel_Header_Duplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tên tiêu đề không được để trống..
+        /// </summary>
+        public static string Excel_Header_Empty {
+            get {
+                return ResourceManager.GetString("Excel_Header_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Không thể tiếp tục nhập dữ liệu nếu các cột bắt buộc chưa được ghép với cột tương ứng trên tệp Excel. Vui lòng kiểm tra lại..
+        /// </summary>
+        public static string Excel_Header_Required_Not_Map {
+            get {
+                return ResourceManager.GetString("Excel_Header_Required_Not_Map", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dòng dữ liệu trùng với dòng số &lt;{0}&gt;..
+        /// </summary>
+        public static string Excel_Row_Duplicate {
+            get {
+                return ResourceManager.GetString("Excel_Row_Duplicate", resourceCulture);
             }
         }
         
@@ -97,11 +205,47 @@ namespace MISA.WebFresher052023.CTM.Domain {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Kí tự cuối mã phải là số..
+        ///   Looks up a localized string similar to Tệp đính kèm không hợp lệ, chỉ chấp file .xlsx..
         /// </summary>
-        public static string Last_Character_Code_Not_Number {
+        public static string Format_Excel_Error {
             get {
-                return ResourceManager.GetString("Last_Character_Code_Not_Number", resourceCulture);
+                return ResourceManager.GetString("Format_Excel_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hệ thống đã ghi nhận lệnh nhập khẩu..
+        /// </summary>
+        public static string Import_Excel_Request_Success {
+            get {
+                return ResourceManager.GetString("Import_Excel_Request_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vượt quá kích thước file cho phép..
+        /// </summary>
+        public static string Max_Size_File_Error {
+            get {
+                return ResourceManager.GetString("Max_Size_File_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phiên làm việc của bạn đã hết, vui lòng reload trang để bắt đầu phiên mới..
+        /// </summary>
+        public static string Session_Is_Over {
+            get {
+                return ResourceManager.GetString("Session_Is_Over", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sheet không có dữ liệu..
+        /// </summary>
+        public static string Sheet_Is_Empty {
+            get {
+                return ResourceManager.GetString("Sheet_Is_Empty", resourceCulture);
             }
         }
         
@@ -120,6 +264,33 @@ namespace MISA.WebFresher052023.CTM.Domain {
         public static string Validate_User_Input_Error {
             get {
                 return ResourceManager.GetString("Validate_User_Input_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code &lt;{0}&gt; không đúng định dạng. Ví dụ đúng: NV-1001, AB2-999..
+        /// </summary>
+        public static string Wrong_Format_Code {
+            get {
+                return ResourceManager.GetString("Wrong_Format_Code", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sai định dạng ngày tháng, định dạng đúng: &lt;{0}&gt;..
+        /// </summary>
+        public static string Wrong_Format_Date {
+            get {
+                return ResourceManager.GetString("Wrong_Format_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email không đúng định dạng..
+        /// </summary>
+        public static string Wrong_Format_Email {
+            get {
+                return ResourceManager.GetString("Wrong_Format_Email", resourceCulture);
             }
         }
     }

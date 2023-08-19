@@ -4,9 +4,9 @@
     :class="classOfButton"
     class="style-button"
     :disabled="disable"
-    @click="clickButton"
     ref="buttonContainer"
     :tabindex="tabindex"
+    @click="clickButton"
     @focus="isFocusButton = true"
     @focusout="isFocusButton = false"
     @keydown="onKeyDownButton"
@@ -14,11 +14,9 @@
     <div
       class="misa-button--container"
       :style="styleOfButtonContainer"
-      @mouseenter="this.buttonHover = true"
-      @mouseleave="this.buttonHover = false"
       :class="isFocusButton && type !== 'link' ? 'misa-button--focus' : ''"
-      @click="!disable ? clickBtnContainer() : ''"
       ref="btnContainerRef"
+      @click="!disable ? clickBtnContainer() : ''"
       @keydown="onKeyDownButton"
     >
       <misa-icon
@@ -28,8 +26,15 @@
         class="button__icon"
         :tooltip="tooltip"
         :disable="disable"
+        @mouseenter="this.buttonHover = true"
+        @mouseleave="this.buttonHover = false"
       />
-      <div class="button__title">
+      <div
+        class="button__title"
+        tabindex="-1"
+        @mouseenter="this.buttonHover = true"
+        @mouseleave="this.buttonHover = false"
+      >
         <slot></slot>
       </div>
       <div
@@ -37,6 +42,7 @@
         class="button__dropdown"
         :style="styleButtonDropdown"
         @click="clickDropdownButton"
+        tabindex="-1"
       >
         <misa-icon
           :icon="
@@ -56,6 +62,9 @@
         :key="data.id"
         @click="clickDataDropdownItem($event, data.id)"
         class="data__item"
+        :class="
+          dataDropdownSelectedValue === data.value ? 'data__item--selected' : ''
+        "
       >
         {{ data.title }}
       </div>
@@ -139,6 +148,12 @@ export default {
     dataDropdownTop: {
       default: false,
     },
+
+    /* biến sử dụng cho việc hiện màu đã chọn của data_dropdown */
+    dataDropdownSelectedValue: {
+      default: "",
+    },
+
     tabindex: {
       default: "0",
     },

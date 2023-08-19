@@ -10,7 +10,7 @@ namespace MISA.WebFresher052023.CTM.Controllers
     /// CreatedBy: TTANH (12/07/2023)
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class DepartmentsController : BaseController<Department, DepartmentDto, DepartmentCreateDto, DepartmentUpdateDto>
+    public class DepartmentsController : CodeController<Department, DepartmentDto, DepartmentCreateDto, DepartmentUpdateDto>
     {
         public DepartmentsController(IDepartmentService departmentService) : base(departmentService)
         {

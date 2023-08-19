@@ -1,4 +1,6 @@
-﻿namespace MISA.WebFresher052023.CTM.Domain
+﻿using System.Text.RegularExpressions;
+
+namespace MISA.WebFresher052023.CTM.Domain
 {
     /// <summary>
     /// Class dùng để validate.
@@ -7,13 +9,13 @@
     public abstract class BaseValidate<TEntity> : IBaseValidate<TEntity>
     {
         #region Fields
-        private readonly IBaseRepository<TEntity> _baseRepository;
+        private readonly ICodeRepository<TEntity> _codeRepository;
         #endregion
 
         #region Constructor
-        public BaseValidate(IBaseRepository<TEntity> baseRepository)
+        public BaseValidate(ICodeRepository<TEntity> codeRepository)
         {
-            _baseRepository = baseRepository;
+            _codeRepository = codeRepository;
         }
         #endregion
 
@@ -27,23 +29,24 @@
         /// CreatedBy: TTANH (14/07/2023)
         public async Task<bool> CodeValidate(string code)
         {
-            var check = await _baseRepository.GetByCodeAsync(code);
+            var regexCode = new Regex(Resource.Code_Regex);
 
-            if (check != null)
+            if (!regexCode.IsMatch(code))
             {
-                throw new ValidateException(Convert.ToInt32(StatusErrorCode.CodeDuplicate), $"Đối tượng {code} đã tồn tại", null);
+                var messageError = string.Format(Resource.Wrong_Format_Code, code);
+                throw new ValidateException(StatusErrorCode.WrongFormatCode, messageError, null);
             }
 
-            var lastCharacterCode = code[code.Length - 1];
+            var checkEntity = await _codeRepository.FindByCodeAsync(code);
 
-            if (lastCharacterCode < '0' || lastCharacterCode > '9')
+            if (checkEntity != null)
             {
-                throw new ValidateException(Convert.ToInt32(StatusErrorCode.WrongFormatCode), ResourceVN.Last_Character_Code_Not_Number, null);
+                var messageError = string.Format(Resource.Code_Exist, code);
+                throw new ValidateException(StatusErrorCode.CodeDuplicate, messageError, null);
             }
 
             return true;
         }
         #endregion
-
     }
 }

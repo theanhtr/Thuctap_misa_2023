@@ -2,7 +2,9 @@
   <div class="paging">
     <div class="paging-left">
       <div class="total-records">
-        Tổng số: <strong>{{ modelValue.totalRecord }}</strong> bản ghi
+        {{ $t("component.paging.total") }}:
+        <strong>{{ modelValue.totalRecord }}</strong>
+        {{ $t("component.paging.record") }}
       </div>
     </div>
     <div class="paging-right">
@@ -12,6 +14,7 @@
         borderRadius="var(--border-radius-default)"
         :dataDropdown="pagingDataDropdown"
         :dataDropdownTop="true"
+        :dataDropdownSelectedValue="modelValue.pageSize"
         @clickItem="changePageSize"
         >{{ pagingTitle }}</misa-button
       >
@@ -24,12 +27,12 @@
           class="m-r-13"
           @clickBtnContainer="clickPreviousPage"
         >
-          Trước
+          {{ $t("component.paging.previous") }}
         </misa-button>
         <misa-button
           type="link"
           colorText="#111"
-          v-for="page in modelValue.totalPage"
+          v-for="(page, index) in pageCalculate"
           :key="page"
           :fontWeight="page === modelValue.pageNumber ? '700' : '400'"
           :border="
@@ -39,7 +42,7 @@
           "
           padding="0px 6px"
           borderRadius="var(--border-radius-default)"
-          @clickBtnContainer="selectPage(page)"
+          @clickBtnContainer="selectPage(page, index)"
         >
           {{ page }}
         </misa-button>
@@ -48,10 +51,10 @@
           colorText="#111"
           fontWeight="400"
           :disable="modelValue.pageNumber === modelValue.totalPage"
-          class="m-l-13"
+          class="m-l-13 m-r-8"
           @clickBtnContainer="clickNextPage"
         >
-          Sau
+          {{ $t("component.paging.next") }}
         </misa-button>
       </div>
     </div>
@@ -60,6 +63,7 @@
 
 <script>
 import { findIndexByAttribute } from "@/helper/common.js";
+import { CommonErrorHandle } from "@/helper/error-handle.js";
 
 export default {
   name: "MISAPaging",
@@ -77,42 +81,45 @@ export default {
       required: true,
     },
   },
+
   data() {
     return {
       pagingDataDropdown: [
         {
           id: 10,
           value: 10,
-          title:
-            10 + this.$_MISAResource[this.$store.state.langCode].Paging.Title,
+          title: this.$t("component.paging.recordPerPage", { count: 10 }),
         },
         {
           id: 20,
           value: 20,
-          title:
-            20 + this.$_MISAResource[this.$store.state.langCode].Paging.Title,
+          title: this.$t("component.paging.recordPerPage", { count: 20 }),
         },
         {
           id: 30,
           value: 30,
-          title:
-            30 + this.$_MISAResource[this.$store.state.langCode].Paging.Title,
+          title: this.$t("component.paging.recordPerPage", { count: 30 }),
         },
         {
           id: 50,
           value: 50,
-          title:
-            50 + this.$_MISAResource[this.$store.state.langCode].Paging.Title,
+          title: this.$t("component.paging.recordPerPage", { count: 50 }),
         },
         {
           id: 100,
           value: 100,
-          title:
-            100 + this.$_MISAResource[this.$store.state.langCode].Paging.Title,
+          title: this.$t("component.paging.recordPerPage", { count: 100 }),
         },
       ],
+
+      currentIndexShow: 0,
     };
   },
+
+  created() {
+    this.currentIndexShow = this.modelValue.pageNumber;
+  },
+
   methods: {
     /**
      * thay đổi số lượng bản ghi trên 1 page
@@ -159,11 +166,19 @@ export default {
 
     /**
      * chọn 1 stt page mới
-     * @author: TTANH (03/07/2023)
+     * @param {int} index vị trí của ptử chọn trong mảng
+     * @param {*} newPageNumber giá trị page chọn
+     * @author: TTANH (25/07/2023)
      */
-    selectPage(newPageNumber) {
+    selectPage(newPageNumber, index) {
       try {
-        if (newPageNumber !== this.modelValue.pageNumber) {
+        if (newPageNumber === "...") {
+          if (this.pageCalculate[index + 1] !== this.modelValue.totalPage) {
+            this.currentIndexShow -= 2;
+          } else {
+            this.currentIndexShow += 2;
+          }
+        } else if (newPageNumber !== this.modelValue.pageNumber) {
           this.$emit("update:modelValue", {
             ...this.modelValue,
             pageNumber: newPageNumber,
@@ -198,6 +213,10 @@ export default {
     },
   },
   computed: {
+    /**
+     * title cho các item dropdown list
+     * @author: TTANH (25/07/2023)
+     */
     pagingTitle() {
       const index = findIndexByAttribute(
         this.pagingDataDropdown,
@@ -206,16 +225,46 @@ export default {
       );
 
       if (index !== -1) {
-        return (
-          this.pagingDataDropdown[index].value +
-          this.$_MISAResource[this.$store.state.langCode].Paging.Title
-        );
+        return this.$t("component.paging.recordPerPage", {
+          count: this.pagingDataDropdown[index].value,
+        });
       } else {
-        return (
-          this.pagingDataDropdown[index].value +
-          this.$_MISAResource[this.$store.state.langCode].Paging.Error
-        );
+        CommonErrorHandle();
       }
+    },
+
+    /**
+     * Tính toán hiển thị trang
+     * @author: TTANH (25/07/2023)
+     */
+    pageCalculate() {
+      let pages = []; // có cả ...
+      for (let i = 1; i <= this.modelValue.totalPage; i++) {
+        if (
+          i === 1 ||
+          i === this.modelValue.totalPage ||
+          (this.currentIndexShow - 1 <= i && i <= this.currentIndexShow + 1)
+        ) {
+          pages.push(i);
+        } else if (
+          i === this.currentIndexShow + 2 ||
+          i === this.currentIndexShow - 2
+        ) {
+          pages.push("...");
+        }
+      }
+
+      return pages;
+    },
+  },
+
+  watch: {
+    modelValue: {
+      handler: function (newValue) {
+        this.currentIndexShow = newValue.pageNumber;
+      },
+
+      deep: true,
     },
   },
 };

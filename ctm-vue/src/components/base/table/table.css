@@ -68,7 +68,7 @@
 }
 
 .m-table .m-tbody-viewer th {
-  z-index: 1;
+  z-index: 3;
   padding: 0 10px;
 }
 
@@ -99,7 +99,6 @@
 .m-th__text {
   white-space: nowrap;
   width: 100%;
-  padding-right: 12px;
 }
 
 .m-th:hover .m-th__text {
@@ -143,11 +142,11 @@
 
 .function__context {
   background-color: #fff;
-  padding: 2px 1px;
+  padding: 2px 0px;
   border-radius: var(--border-radius-default);
   border: 1px solid #babec5;
   width: 120px;
-  height: 90px;
+  height: auto;
   position: fixed;
   z-index: 10;
 }

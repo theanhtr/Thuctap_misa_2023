@@ -1,5 +1,10 @@
 <template>
-  <div :style="styleContainer" class="input-container">
+  <div
+    @mouseenter="hoverInput = true"
+    @mouseleave="hoverInput = false"
+    :style="styleContainer"
+    class="input-container"
+  >
     <label
       v-if="labelText !== ''"
       :for="`dp-input-${idInput}`"
@@ -14,18 +19,22 @@
       :uid="idInput"
       :placeholder="$store.state.formatDate"
       position="right"
-      input-class-name="dp-custom-input"
+      :input-class-name="`dp-custom-input ${
+        errorText !== '' ? 'dp-error-input' : ''
+      }`"
       menu-class-name="dp-custom-menu"
       calendar-class-name="dp-custom-calendar"
       calendar-cell-class-name="dp-custom-cell"
       :clearable="false"
       :enable-time-picker="false"
       :format="$store.state.formatDate"
-      :day-names="['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN']"
+      :day-names="dayNames"
       text-input
       auto-apply
       timezone="Asia/Novosibirsk"
+      ref="InputDatePicker"
       @open="this.isPickMonthYear = false"
+      @keydown="handleInputKeydown"
     >
       <template #input-icon> </template>
       <template
@@ -50,7 +59,12 @@
               style="cursor: pointer"
               @click="openMonthYearSelect"
             >
-              Tháng {{ month + 1 }} Năm {{ year }}
+              {{
+                $t("component.datePicker.monthYearLabel", {
+                  month: month + 1,
+                  year: year,
+                })
+              }}
             </div>
             <div v-else class="month-year--picker">
               <div
@@ -102,7 +116,7 @@
                   class="cancel-select"
                   @click="closeMonthYearSelect(month, year)"
                 >
-                  Hủy bỏ
+                  {{ $t("component.datePicker.cancelSelectMonthYear") }}
                 </div>
               </div>
             </div>
@@ -123,7 +137,7 @@
       <template #action-extra="{ selectCurrentDate }">
         <div
           @click="selectCurrentDate()"
-          title="Chọn ngày hôm nay"
+          :title="$t('component.datePicker.todayTooltip')"
           class="date-picker__current-date"
         >
           <misa-separation-line
@@ -132,10 +146,16 @@
               border-top: 1px solid var(--border-color-default);
             "
           />
-          <div class="current-date__text">Hôm nay</div>
+          <div class="current-date__text">
+            {{ $t("component.datePicker.today") }}
+          </div>
         </div>
       </template>
     </VueDatePicker>
+
+    <misa-tooltip v-if="errorText !== '' && hoverInput">{{
+      errorText
+    }}</misa-tooltip>
   </div>
 </template>
 
@@ -180,6 +200,16 @@ export default {
   },
   data() {
     return {
+      dayNames: [
+        this.$t("component.datePicker.dayName.monday"),
+        this.$t("component.datePicker.dayName.tuesday"),
+        this.$t("component.datePicker.dayName.wednesday"),
+        this.$t("component.datePicker.dayName.thursday"),
+        this.$t("component.datePicker.dayName.friday"),
+        this.$t("component.datePicker.dayName.saturday"),
+        this.$t("component.datePicker.dayName.sunday"),
+      ],
+
       date: this.modelValue,
       isPickMonthYear: false,
       isPickMonth: false,
@@ -188,56 +218,58 @@ export default {
       monthRange: [
         {
           value: 1,
-          text: "Thg 1",
+          text: this.$t("component.datePicker.monthRange.january"),
         },
         {
           value: 2,
-          text: "Thg 2",
+          text: this.$t("component.datePicker.monthRange.february"),
         },
         {
           value: 3,
-          text: "Thg 3",
+          text: this.$t("component.datePicker.monthRange.march"),
         },
         {
           value: 4,
-          text: "Thg 4",
+          text: this.$t("component.datePicker.monthRange.april"),
         },
         {
           value: 5,
-          text: "Thg 5",
+          text: this.$t("component.datePicker.monthRange.may"),
         },
         {
           value: 6,
-          text: "Thg 6",
+          text: this.$t("component.datePicker.monthRange.june"),
         },
         {
           value: 7,
-          text: "Thg 7",
+          text: this.$t("component.datePicker.monthRange.july"),
         },
         {
           value: 8,
-          text: "Thg 8",
+          text: this.$t("component.datePicker.monthRange.august"),
         },
         {
           value: 9,
-          text: "Thg 9",
+          text: this.$t("component.datePicker.monthRange.september"),
         },
         {
           value: 10,
-          text: "Thg 10",
+          text: this.$t("component.datePicker.monthRange.october"),
         },
         {
           value: 11,
-          text: "Thg 11",
+          text: this.$t("component.datePicker.monthRange.november"),
         },
         {
           value: 12,
-          text: "Thg 12",
+          text: this.$t("component.datePicker.monthRange.december"),
         },
       ],
 
       yearSelected: "",
       monthSelected: "",
+
+      hoverInput: false,
     };
   },
   created() {
@@ -253,6 +285,34 @@ export default {
     mainInput.tabIndex = this.tabindex;
   },
   methods: {
+    /**
+     * cho dữ liệu ngày đã chọn là trống
+     * @author: TTANH (07/08/2023)
+     */
+    resetDatePicked() {
+      this.date = "";
+    },
+
+    /**
+     * xử lý sự kiện key down
+     * @author: TTANH (29/07/2023)
+     */
+    handleInputKeydown(event) {
+      try {
+        if (
+          event.keyCode === this.$_MISAEnum.KEY_CODE.TAB ||
+          event.keyCode === this.$_MISAEnum.KEY_CODE.ENTER
+        ) {
+          this.$refs.InputDatePicker.closeMenu();
+        }
+      } catch (error) {
+        console.log(
+          "🚀 ~ file: MISACombobox.vue:389 ~ handleInputKeydown ~ error:",
+          error
+        );
+      }
+    },
+
     /**
      * reset tháng và năm đang được chọn
      * @param {string} dateSelect date hiện tại để tính tháng năm được reset
@@ -491,10 +551,11 @@ export default {
     date(newValue) {
       this.resetPickMonthYear(newValue);
 
-      let copyDate = new Date(newValue);
-      copyDate.setHours(copyDate.getHours() + 7);
-
-      this.$emit("update:modelValue", copyDate.toISOString());
+      if (newValue) {
+        this.$emit("update:modelValue", newValue.toLocaleString());
+      } else {
+        this.$emit("update:modelValue", "");
+      }
     },
   },
 };

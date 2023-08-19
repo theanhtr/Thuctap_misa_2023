@@ -2,6 +2,24 @@
   background: url("../../../assets/img/Sprites.64af8f61.svg") no-repeat;
 }
 
+.suggestion-icon {
+  background-position: -906px -456px;
+  width: 46px;
+  height: 46px;
+}
+
+.file-icon {
+  background-position: -539px -203px;
+  width: 19px;
+  height: 19px;
+}
+
+.download-icon {
+  background-position: -707px -361px;
+  width: 11px;
+  height: 13px;
+}
+
 /* checkbox icon */
 .checkbox-icon {
   background-position: -899px -316px;

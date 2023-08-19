@@ -1,4 +1,6 @@
-﻿namespace MISA.WebFresher052023.CTM.Domain
+﻿using System.Text.RegularExpressions;
+
+namespace MISA.WebFresher052023.CTM.Domain
 {
     /// <summary>
     /// Base validate chính

@@ -1,10 +1,4 @@
-﻿using Dapper;
-using Microsoft.Extensions.Configuration;
-using MySqlConnector;
-using static Dapper.SqlMapper;
-using System.Data;
-using System.Data.Common;
-using MISA.WebFresher052023.CTM.Domain;
+﻿using MISA.WebFresher052023.CTM.Domain;
 
 namespace MISA.WebFresher052023.CTM.Infrastructure
 {
@@ -12,21 +6,12 @@ namespace MISA.WebFresher052023.CTM.Infrastructure
     /// Triển khai bằng dapper và mysql
     /// </summary>
     /// Created By: TTANH (12/07/2023)
-    public class DepartmentRepository : BaseRepository<Department>, IDepartmentRepository
+    public class DepartmentRepository : CodeRepository<Department>, IDepartmentRepository
     {
-        #region Fields
-
-        #endregion
-
         #region Constructor
-        public DepartmentRepository(IConfiguration configuration) : base(configuration)
+        public DepartmentRepository(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
         #endregion
-
-        #region Methods
-
-        #endregion
-
     }
 }

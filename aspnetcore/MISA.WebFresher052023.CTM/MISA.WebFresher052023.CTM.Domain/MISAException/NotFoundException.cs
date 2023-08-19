@@ -10,7 +10,7 @@
         /// <summary>
         /// Mã lỗi
         /// </summary>
-        public int ErrorCode { get; set; }
+        public StatusErrorCode ErrorCode { get; set; }
 
         /// <summary>
         /// Thông tin lỗi
@@ -21,9 +21,9 @@
         #region Constructor
         public NotFoundException()
         {
-            ErrorCode = Convert.ToInt32(StatusErrorCode.NotFoundData);
+            ErrorCode = StatusErrorCode.NotFoundData;
         }
-        public NotFoundException(int errorCode, string? errorMessage)
+        public NotFoundException(StatusErrorCode errorCode, string? errorMessage)
         {
             ErrorCode = errorCode;
             ErrorMessage = errorMessage;

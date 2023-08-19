@@ -1,6 +1,10 @@
 <template>
   <div :style="styleContainer" class="radio-input__container">
-    <label v-if="labelText !== ''" class="radio-input__label">
+    <label
+      v-if="labelText !== ''"
+      :style="{ margin: marginLabel }"
+      class="radio-input__label"
+    >
       {{ labelText }}
       <div v-if="inputRequired" style="color: red; padding-left: 3px">*</div>
     </label>
@@ -82,6 +86,9 @@ export default {
     },
     tabindex: {
       default: "0",
+    },
+    marginLabel: {
+      default: "",
     },
   },
   methods: {

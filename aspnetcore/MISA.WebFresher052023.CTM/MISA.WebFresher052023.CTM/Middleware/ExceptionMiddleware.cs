@@ -47,9 +47,9 @@ namespace MISA.WebFresher052023.CTM
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
                 await context.Response.WriteAsync(text: new BaseException()
                 {
-                    ErrorCode = ((NotFoundException)exception).ErrorCode,
-                    DevMessage = ((NotFoundException)exception).ErrorMessage ?? ResourceVN.Exception_NotFound_Default,
-                    UserMessage = ((NotFoundException)exception).ErrorMessage ?? ResourceVN.Exception_NotFound_Default,
+                    ErrorCode = (int)((NotFoundException)exception).ErrorCode,
+                    DevMessage = ((NotFoundException)exception).ErrorMessage ?? Resource.Exception_NotFound_Default,
+                    UserMessage = ((NotFoundException)exception).ErrorMessage ?? Resource.Exception_NotFound_Default,
                     TraceId = context.TraceIdentifier,
                     MoreInfo = exception.HelpLink,
                     Data = { }
@@ -60,9 +60,9 @@ namespace MISA.WebFresher052023.CTM
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 await context.Response.WriteAsync(text: new BaseException()
                 {
-                    ErrorCode = ((ValidateException)exception).ErrorCode,
-                    DevMessage = ((ValidateException)exception).ErrorMessage ?? ResourceVN.Exception_Validate_Default,
-                    UserMessage = ((ValidateException)exception).ErrorMessage ?? ResourceVN.Exception_Validate_Default,
+                    ErrorCode = (int)((ValidateException)exception).ErrorCode,
+                    DevMessage = ((ValidateException)exception).ErrorMessage ?? Resource.Exception_Validate_Default,
+                    UserMessage = ((ValidateException)exception).ErrorMessage ?? Resource.Exception_Validate_Default,
                     TraceId = context.TraceIdentifier,
                     MoreInfo = exception.HelpLink,
                     Data = ((ValidateException)exception).Data
@@ -76,7 +76,7 @@ namespace MISA.WebFresher052023.CTM
                     {
                         ErrorCode = context.Response.StatusCode,
                         DevMessage = exception.Message,
-                        UserMessage = ResourceVN.Exception_System_Default,
+                        UserMessage = Resource.Exception_System_Default,
                         TraceId = context.TraceIdentifier,
                         MoreInfo = exception.HelpLink
                     }.ToString() ?? ""

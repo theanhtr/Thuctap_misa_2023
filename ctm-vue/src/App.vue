@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-main">
+  <div class="app-layout">
     <div class="toast-group">
       <misa-toast
         v-for="toast in $store.state.toasts"
@@ -10,24 +10,13 @@
         {{ toast.text }}
       </misa-toast>
     </div>
-    <TheSidebar />
-    <TheMainContent>
-      <router-view />
-    </TheMainContent>
+    <router-view />
   </div>
 </template>
 
 <script>
-import TheSidebar from "./components/layout/sidebar/TheSidebar.vue";
-import TheMainContent from "./components/layout/main-content/TheMainContent.vue";
-
 export default {
   name: "App",
-  components: {
-    TheMainContent,
-    TheSidebar,
-  },
-
   methods: {
     /**
      * xử lý xóa 1 toast
@@ -47,10 +36,8 @@ export default {
 
 <style>
 @import url(./css/main.css);
-
-.layout-main {
-  display: flex;
-  height: 100vh;
+.app-layout {
   width: 100vw;
+  height: 100vh;
 }
 </style>

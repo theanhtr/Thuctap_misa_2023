@@ -139,7 +139,7 @@ export var columnsInfo = [
     name: "Lương đóng bảo hiểm",
     size: 200,
     textAlign: "right",
-    format: "text",
+    format: "currency",
     isShow: true,
     isPin: false,
   },

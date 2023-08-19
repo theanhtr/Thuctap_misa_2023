@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MISA.WebFresher052023.CTM.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MISA.WebFresher052023.CTM.Domain", "MISA.WebFresher052023.CTM.Domain\MISA.WebFresher052023.CTM.Domain.csproj", "{C500AA6C-5E72-4E35-BC2A-B7DF1D0B5B79}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MISA.WebFresher052023.CTM.Domain.Tests", "MISA.WebFresher052023.CTM.Domain.Tests\MISA.WebFresher052023.CTM.Domain.Tests.csproj", "{1D42A67F-1D41-4676-B982-8951700F8E4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MISA.WebFresher052023.CTM.Application.Tests", "MISA.WebFresher052023.CTM.Application.Tests\MISA.WebFresher052023.CTM.Application.Tests.csproj", "{CE146F7A-0AAE-4927-8524-C615938524B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{C500AA6C-5E72-4E35-BC2A-B7DF1D0B5B79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C500AA6C-5E72-4E35-BC2A-B7DF1D0B5B79}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C500AA6C-5E72-4E35-BC2A-B7DF1D0B5B79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D42A67F-1D41-4676-B982-8951700F8E4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D42A67F-1D41-4676-B982-8951700F8E4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D42A67F-1D41-4676-B982-8951700F8E4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D42A67F-1D41-4676-B982-8951700F8E4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE146F7A-0AAE-4927-8524-C615938524B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE146F7A-0AAE-4927-8524-C615938524B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE146F7A-0AAE-4927-8524-C615938524B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE146F7A-0AAE-4927-8524-C615938524B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

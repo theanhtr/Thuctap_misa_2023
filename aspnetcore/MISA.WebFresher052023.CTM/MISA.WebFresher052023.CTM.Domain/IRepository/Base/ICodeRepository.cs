@@ -16,12 +16,26 @@
         Task<TEntity> GetByCodeAsync(string code);
 
         /// <summary>
-        /// Hàm lấy ra tất cả các code có dạng giống với code đầu vào
+        /// Hàm lấy một bản ghi theo mã code
         /// </summary>
-        /// <param name="templateCode">Mã code đầu vào</param>
-        /// <returns>Chuỗi các code</returns>s
-        /// CreatedBy: TTANH (18/07/2023)
-        Task<IEnumerable<string>> GetSameCodesAsync(string templateCode);
+        /// <param name="code">Mã code của bản ghi</param>
+        /// <returns>Bản ghi, null nếu không tìm thấy</returns>
+        /// Created by: TTANH (18/07/2023)
+        Task<TEntity> FindByCodeAsync(string code);
+
+        /// <summary>
+        /// Hàm lấy các bản ghi theo chuỗi code
+        /// </summary>
+        /// <param name="codes">chuỗi code</param>
+        /// Created by: TTANH (27/07/2023)
+        Task<List<TEntity>> GetListByCodesAsync(List<Guid> codes);
+
+        /// <summary>
+        /// Hàm lấy một mã code mới không trùng
+        /// </summary>
+        /// <returns>Mã code mới</returns>
+        /// Created by: TTANH (18/07/2023)
+        Task<string> GetNewCodeAsync();
         #endregion
     }
 }

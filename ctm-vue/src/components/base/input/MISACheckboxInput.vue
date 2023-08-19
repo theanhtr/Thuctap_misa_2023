@@ -2,10 +2,14 @@
   <div
     class="m-checkbox"
     :style="styleCheckbox"
-    @click="clickCheckbox"
+    @click="!disable ? clickCheckbox($event) : ''"
     :class="{ 'animate-checked': checked, 'animate-unchecked': !checked }"
   >
-    <misa-icon v-if="checked" icon="checkbox-icon" />
+    <misa-icon
+      :style="{ cursor: !this.disable ? 'pointer' : 'default' }"
+      v-if="checked"
+      icon="checkbox-icon"
+    />
   </div>
 </template>
 
@@ -14,6 +18,9 @@ export default {
   name: "MISACheckboxInput",
   props: {
     isCheck: {
+      default: false,
+    },
+    disable: {
       default: false,
     },
   },
@@ -51,6 +58,10 @@ export default {
         border: this.checked
           ? "1px solid var(--control-border-color--active)"
           : "1px solid var(--border-color-default)",
+
+        backgroundColor: !this.disable ? "" : "antiquewhite",
+
+        cursor: !this.disable ? "pointer" : "default",
       };
     },
   },

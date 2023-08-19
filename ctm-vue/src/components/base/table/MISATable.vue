@@ -2,7 +2,11 @@
   <table class="m-table">
     <thead>
       <tr>
-        <th v-if="!oneRowSelect" class="m-table__checkbox-column">
+        <th
+          @dblclick="preventDoubleClick"
+          v-if="!oneRowSelect"
+          class="m-table__checkbox-column"
+        >
           <template v-if="rowsData.length === 0">
             <misa-loading-skeleton />
           </template>
@@ -24,11 +28,9 @@
               <div
                 class="m-th__text"
                 :style="{ cursor: !oneRowSelect ? 'pointer' : 'default' }"
+                :title="column.tooltip ?? ''"
               >
                 {{ column.name }}
-              </div>
-              <div v-if="!oneRowSelect" class="m-th__filter">
-                <misa-icon icon="th__filter" height="14px" width="14px" />
               </div>
             </div>
             <div
@@ -42,7 +44,9 @@
           style="text-align: end"
           class="m-table__row-function"
         >
-          <span style="padding-right: 6px">Chức năng</span>
+          <span style="padding-right: 6px">{{
+            $t("component.table.function")
+          }}</span>
         </th>
       </tr>
     </thead>
@@ -51,37 +55,108 @@
         v-for="row in rowsLoad"
         :key="row.id"
         :class="this.selectedRows.includes(row.id) ? 'row--selected' : ''"
-        @click="this.$emit('clickRow', row.id)"
+        @click="clickRow(row.id)"
         @dblclick="this.$emit('doubleClickRow', row.id)"
         style="cursor: pointer"
       >
-        <td v-if="!oneRowSelect" class="m-table__checkbox-column">
-          <template v-if="rowsData.length === 0">
-            <misa-loading-skeleton />
-          </template>
-          <template v-else>
-            <misa-checkbox-input
-              @checked="$emit('checked-row', row.id)"
-              @unchecked="$emit('unchecked-row', row.id)"
-              :isCheck="this.selectedRows.includes(row.id) ? true : false"
-            />
-          </template>
-        </td>
         <td
-          v-for="(column, index) in columnsInfo"
-          :key="column.id"
-          :class="`text-align--${column.textAlign}`"
-          :title="row[column.id]"
-          :style="styleTd(column, index)"
+          @dblclick="preventDoubleClick"
+          v-if="!oneRowSelect"
+          class="m-table__checkbox-column"
+          :style="{
+            backgroundColor:
+              this.rowIsFocus == row.id
+                ? 'var(--grid-body__line-focus-background-color) !important'
+                : '',
+          }"
         >
           <template v-if="rowsData.length === 0">
             <misa-loading-skeleton />
           </template>
           <template v-else>
+            <misa-checkbox-input
+              @checked="checkedRow(row.id)"
+              @unchecked="uncheckedRow(row.id)"
+              :isCheck="this.selectedRows.includes(row.id) ? true : false"
+            />
+          </template>
+        </td>
+        <td
+          v-for="(column, index) in columnsShow"
+          :key="column.id"
+          :class="`text-align--${column.textAlign}`"
+          :title="row[column.id]"
+          :style="styleTd(column, index, row.id)"
+        >
+          <template v-if="rowsData.length === 0">
+            <misa-loading-skeleton />
+          </template>
+          <template v-else-if="column.format === 'valid-check'">
+            <div
+              v-if="row[column.id] === $_MISAEnum.RECORD_CHECK.VALID"
+              style="color: var(--tab__item--active-text-color)"
+            >
+              {{ $t("component.table.valid") }}
+            </div>
+            <div v-else style="color: #ff0404">
+              {{ $t("component.table.invalid") }}
+            </div>
+          </template>
+          <template v-else-if="column.format === 'checkbox'">
+            <misa-checkbox-input
+              @checked="row[column.id] = true"
+              @unchecked="row[column.id] = false"
+              :isCheck="row[column.id]"
+              :disable="row.isCannotChangeChecked"
+              style="margin: 0 auto"
+            />
+          </template>
+          <template v-else-if="column.format === 'input-combobox'">
+            <misa-combobox
+              v-model="row[column.id]"
+              type="single-row"
+              :rowsData="comboboxRowData"
+              v-if="this.rowIsFocus == row.id"
+            />
+
+            <div v-else>{{ nameOfSelectValueCombobox(row[column.id]) }}</div>
+          </template>
+          <template v-else-if="column.format === 'input-text'">
+            <misa-textfield
+              v-model="row[column.id]"
+              type="text"
+              v-if="this.rowIsFocus == row.id"
+            />
+            <div v-else>{{ row[column.id] }}</div>
+          </template>
+          <template v-else-if="column.format === 'input-number_no_dot'">
+            <misa-textfield
+              v-model="row[column.id]"
+              type="number_no_dot"
+              v-if="this.rowIsFocus == row.id"
+            />
+            <div v-else>{{ row[column.id] }}</div>
+          </template>
+          <template v-else>
             {{ formatData(row[column.id], column.format) }}
           </template>
         </td>
-        <td v-if="!oneRowSelect" class="m-table__row-function">
+        <td
+          v-if="!oneRowSelect"
+          class="m-table__row-function"
+          :style="{
+            backgroundColor:
+              this.rowIsFocus == row.id
+                ? 'var(--grid-body__line-focus-background-color) !important'
+                : '',
+            overflow: 'visible',
+          }"
+          @dblclick="
+            (event) => {
+              event.stopPropagation();
+            }
+          "
+        >
           <template v-if="rowsData.length === 0">
             <misa-loading-skeleton />
           </template>
@@ -96,17 +171,19 @@
                   padding: 6px 1px 6px 16px;
                 "
                 @clickBtnContainer="$emit('clickFixBtn', row.id)"
-                >Sửa</misa-button
+                >{{ $t("common.button.edit") }}</misa-button
               >
-              <misa-icon
+
+              <misa-button
+                type="icon"
+                width="auto"
+                height="20px"
+                borderRadius="var(--border-radius-default)"
+                padding="0px"
+                :border="'none'"
                 icon="dropdown--solid-blue"
-                style="height: 100%"
+                :tabindex="-1"
                 @click="clickButtonDropdownFunctionContext($event, row.id)"
-                @dblclick="
-                  (event) => {
-                    event.stopPropagation();
-                  }
-                "
                 :ref="`refDropdownBtn-${row.id}`"
               />
             </div>
@@ -117,7 +194,7 @@
 
     <tbody class="m-table__body--no-data" v-else>
       <img src="../../../assets/img/no_data.png" />
-      <p>Không có dữ liệu</p>
+      <p>{{ $t("component.table.noData") }}</p>
     </tbody>
 
     <div
@@ -126,9 +203,15 @@
       :style="styleFunctionContext"
       ref="refFunctionContext"
     >
-      <div class="function__item">Nhân bản</div>
-      <div @click="clickDeleteBtn" class="function__item">Xóa</div>
-      <div class="function__item">Ngừng sử dụng</div>
+      <div @click="clickDuplicateBtn" class="function__item">
+        {{ $t("component.table.editData.copy") }}
+      </div>
+      <div @click="clickDeleteBtn" class="function__item">
+        {{ $t("component.table.editData.delete") }}
+      </div>
+      <div class="function__item">
+        {{ $t("component.table.editData.stopUsing") }}
+      </div>
     </div>
   </table>
 </template>
@@ -153,6 +236,11 @@ export default {
       //các biến dùng cho việc resize
       prevX: 0,
       rowIndexResize: -1,
+
+      // để xử lý khi chọn 1 dòng
+      rowIsFocus: "",
+
+      fix: "",
     };
   },
   props: {
@@ -162,8 +250,12 @@ export default {
           id: "EmployeeCode",
           name: "Mã nhân viên",
           size: "150px",
-          textAlign: "left", //bao gồm: left, center, right
-          format: "text", //bao gồm: text, date, currency
+          textAlign: "left", // bao gồm: left, center, right
+          format: "text", // bao gồm: text, date, currency,
+                          // checkbox, input-combobox, input-text, input-number_no_dot, valid-check
+                          //  + với checkbox thì "có thể" thêm isCannotChangeChecked để không cho thay đổi checkbox input ở trường đó
+                          //  + với input-combobox thì "phải" có thêm comboboxRowData và chỉ có duy nhất một combobox input??
+                          //  + với valid-check chỉ chấp nhận _MISAEnum.RECORD_CHECK
           isShow: true,
           isPin: false,
         },
@@ -173,7 +265,10 @@ export default {
       required: true,
       type: Array,
     },
-    /* tất cả các record đều phải có id */
+    /*
+     * tất cả các record đều phải có id
+
+     */
     rowsData: {
       default: [],
       required: true,
@@ -195,8 +290,47 @@ export default {
     noData: {
       default: false,
     },
+
+    /**
+     * sử dụng cho input combobox
+     * tất cả các record trong rowsData đều phải có id, name
+     * và code, nếu không có code thì gán code bằng name
+     */
+    comboboxRowData: {
+      default: [],
+    },
   },
   methods: {
+    /**
+     * xử lý khi checked một dòng
+     * @param {string} rowId id của dòng
+     * @author: TTANH (30/07/2023)
+     */
+    checkedRow(rowId) {
+      this.rowIsFocus = rowId;
+      this.$emit("checked-row", rowId);
+    },
+
+    /**
+     * xử lý khi unchecked một dòng
+     * @param {string} rowId id của dòng
+     * @author: TTANH (30/07/2023)
+     */
+    uncheckedRow(rowId) {
+      this.rowIsFocus = rowId;
+      this.$emit("unchecked-row", rowId);
+    },
+
+    /**
+     * hàm bỏ hành vi double click mặc định và ngăn ko cho ảnh hưởng lên cha
+     * @param {*} event
+     * @author: TTANH (30/07/2023)
+     */
+    preventDoubleClick(event) {
+      event.preventDefault();
+      event.stopPropagation();
+    },
+
     /**
      * format dữ liệu tùy theo loại cần format
      * @author: TTANH (26/06/2023)
@@ -239,11 +373,18 @@ export default {
      */
     clickButtonDropdownFunctionContext(event, idFocus) {
       try {
+        let heightButtonTarget = event.currentTarget.offsetHeight;
+        let widthButtonTarget = event.currentTarget.offsetWidth;
+        this.rowIsFocus = idFocus;
+
         if (idFocus !== this.idFunctionContextFocus) {
           //trừ đi kích thước của functionContext
+          event.preventDefault();
           event.stopPropagation();
-          this.leftFunctionContext = event.x - 110 + "px";
-          this.topFunctionContext = event.y + "px";
+          this.leftFunctionContext =
+            event.x + widthButtonTarget - event.layerX - 118 + "px";
+          this.topFunctionContext =
+            event.y + heightButtonTarget - event.layerY + 1 + "px";
           this.isShowFunctionContext = true;
           this.idFunctionContextFocus = idFocus;
 
@@ -284,16 +425,37 @@ export default {
     clickOutSideFunctionContext(event) {
       try {
         if (
-          !this.$refs.refFunctionContext.contains(event.target) &&
-          !this.$refs[`refDropdownBtn-${this.idFunctionContextFocus}`][0]
-            .getIconContainerRef()
-            .contains(event.target)
+          this.$refs.refFunctionContext &&
+          this.$refs[`refDropdownBtn-${this.idFunctionContextFocus}`][0]
         ) {
-          this.closeFunctionContext();
+          if (
+            !this.$refs.refFunctionContext.contains(event.target) &&
+            !this.$refs[`refDropdownBtn-${this.idFunctionContextFocus}`][0]
+              .getBtnContainerRef()
+              .contains(event.target)
+          ) {
+            this.closeFunctionContext();
+          }
         }
       } catch (error) {
         console.log(
           "🚀 ~ file: MISATable.vue:258 ~ clickOutSideFunctionContext ~ error:",
+          error
+        );
+      }
+    },
+
+    /**
+     * xử lý khi ấn vào nút Nhân bản ở function context
+     * @author: TTANH (01/07/2023)
+     */
+    clickDuplicateBtn() {
+      try {
+        this.$emit("clickContextDuplicateBtn", this.idFunctionContextFocus);
+        this.closeFunctionContext();
+      } catch (error) {
+        console.log(
+          "🚀 ~ file: MISATable.vue:376 ~ clickDuplicateBtn ~ error:",
           error
         );
       }
@@ -343,7 +505,7 @@ export default {
     mouseMoveResizeColumn(event) {
       try {
         if (this.rowIndexResize !== -1) {
-          const currentColumnReizer = this.columnsInfo[this.rowIndexResize];
+          const currentColumnReizer = this.columnsShow[this.rowIndexResize];
           const currentWidth = currentColumnReizer.size;
 
           let resizeWidth = currentWidth + (event.clientX - this.prevX);
@@ -383,7 +545,7 @@ export default {
 
       if (column.isPin) {
         for (let i = 0; i < index; i++) {
-          countLeft += this.columnsInfo[i].size;
+          countLeft += this.columnsShow[i].size;
         }
       }
 
@@ -392,7 +554,7 @@ export default {
         minWidth: column.size + "px",
         width: column.size + "px",
         left: column.isPin ? countLeft + "px" : "",
-        zIndex: column.isPin ? 3 : "",
+        zIndex: column.isPin ? 5 : "",
       };
     },
 
@@ -401,15 +563,16 @@ export default {
      * @author: TTANH (04/07/2023)
      * @param {object} column object lưu trữ thông tin của cột
      * @param {int} index vị trí của cột trong mảng lưu thông tin
+     * @param {string} rowId id của dòng
      * @returns style của cột body
      */
-    styleTd(column, index) {
+    styleTd(column, index, rowId) {
       //40 kích thước của checkbox
       let countLeft = 40;
 
       if (column.isPin) {
         for (let i = 0; i < index; i++) {
-          countLeft += this.columnsInfo[i].size;
+          countLeft += this.columnsShow[i].size;
         }
       }
 
@@ -417,7 +580,37 @@ export default {
         position: column.isPin ? "sticky" : "",
         left: column.isPin ? countLeft + "px" : "",
         zIndex: column.isPin ? 2 : "",
+        backgroundColor:
+          this.rowIsFocus == rowId
+            ? "var(--grid-body__line-focus-background-color) !important"
+            : "",
+        overflow: this.rowIsFocus == rowId ? "visible" : "",
       };
+    },
+
+    /**
+     * sự kiện khi vào 1 dòng
+     * @param {string} rowId id của dòng
+     */
+    clickRow(rowId) {
+      this.$emit("clickRow", rowId);
+      this.rowIsFocus = rowId;
+    },
+
+    /**
+     * tìm tên của hàng đang được chọn
+     * với các td có type là input-combobox
+     * @author: TTANH (24/07/2023)
+     * @param {*} selectId
+     */
+    nameOfSelectValueCombobox(selectId) {
+      var index = findIndexByAttribute(this.comboboxRowData, "id", selectId);
+
+      if (index !== -1) {
+        return this.comboboxRowData[index].name;
+      } else {
+        return "";
+      }
     },
   },
   computed: {
@@ -429,7 +622,44 @@ export default {
     /* tạo progress loading */
     rowsLoad() {
       if (this.rowsData.length === 0) {
+        // fake data để tạo hiệu ứng
         return [
+          {
+            id: "loading",
+          },
+          {
+            id: "loading",
+          },
+          {
+            id: "loading",
+          },
+          {
+            id: "loading",
+          },
+          {
+            id: "loading",
+          },
+          {
+            id: "loading",
+          },
+          {
+            id: "loading",
+          },
+          {
+            id: "loading",
+          },
+          {
+            id: "loading",
+          },
+          {
+            id: "loading",
+          },
+          {
+            id: "loading",
+          },
+          {
+            id: "loading",
+          },
           {
             id: "loading",
           },
@@ -467,6 +697,13 @@ export default {
       }
 
       return true;
+    },
+  },
+  watch: {
+    rowsData() {
+      if (this.isShowFunctionContext) {
+        this.closeFunctionContext();
+      }
     },
   },
 };

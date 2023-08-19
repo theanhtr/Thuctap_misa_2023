@@ -1,25 +1,32 @@
 <template>
   <div class="m-overlay" id="add-employee-popup">
-    <misa-popup title="Thông tin nhân viên">
+    <misa-popup
+      style="overflow: visible"
+      :title="$t('employeeSubsystem.addEmployeePopup.headerTitle')"
+    >
       <template #title__action>
         <div class="add-employee__title-action">
           <div class="title-action__info" @click="clickIsCustomer">
             <misa-checkbox-input :isCheck="isCustomer" />
-            <div class="title-action__title">Là khách hàng</div>
+            <div class="title-action__title">
+              {{ $t("employeeSubsystem.addEmployeePopup.isCustomer") }}
+            </div>
           </div>
           <div class="title-action__info" @click="clickIsSupplier">
             <misa-checkbox-input :isCheck="isSupplier" />
-            <div class="title-action__title">Là nhà cung cấp</div>
+            <div class="title-action__title">
+              {{ $t("employeeSubsystem.addEmployeePopup.isSupplier") }}
+            </div>
           </div>
         </div>
       </template>
       <template #header__close>
-        <misa-icon icon="help" title="Giúp (F1)" />
+        <misa-icon icon="help" :title="$t('common.helpIconTooltip')" />
         <misa-icon
-          @click="$emit('closeAddEmployeePopup')"
+          @click="closeAddForm"
           icon="close"
           style="margin-left: 3px"
-          title="Đóng (ESC)"
+          :title="$t('common.closeIconTooltip')"
         />
       </template>
       <template #content__input-control>
@@ -31,7 +38,14 @@
                 v-model="addEmployeeData.employeeCode"
                 type="code"
                 idInput="add__employee-code"
-                labelText="Mã"
+                :labelText="
+                  $t('employeeSubsystem.addEmployeePopup.labelInput.code')
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.code'
+                  )
+                "
                 :inputRequired="true"
                 style="padding-right: 6px"
                 class="w2/5"
@@ -43,7 +57,14 @@
                 v-model="addEmployeeData.fullName"
                 type="text"
                 idInput="add__full-name"
-                labelText="Tên"
+                :labelText="
+                  $t('employeeSubsystem.addEmployeePopup.labelInput.name')
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.name'
+                  )
+                "
                 :inputRequired="true"
                 class="w3/5"
                 ref="fullName"
@@ -56,7 +77,14 @@
                 v-model="addEmployeeData.departmentId"
                 ref="departmentId"
                 type="table"
-                labelText="Đơn vị"
+                :labelText="
+                  $t('employeeSubsystem.addEmployeePopup.labelInput.department')
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.department'
+                  )
+                "
                 :inputRequired="true"
                 :columnsInfo="departmentColumnsInfo"
                 :rowsData="computedDepartments"
@@ -71,7 +99,14 @@
                 v-model="addEmployeeData.position"
                 type="text"
                 idInput="add__position-code"
-                labelText="Chức danh"
+                :labelText="
+                  $t('employeeSubsystem.addEmployeePopup.labelInput.position')
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.position'
+                  )
+                "
                 class="w1"
                 tabindex="4"
                 ref="position"
@@ -83,9 +118,19 @@
                 v-model="addEmployeeData.supplierCustomerGroup"
                 type="text"
                 idInput="add__error"
-                labelText="Nhóm khách hàng, nhà cung cấp"
+                :labelText="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInput.supplierCustomerGroup'
+                  )
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.supplierCustomerGroup'
+                  )
+                "
                 class="w1"
                 tabindex="5"
+                ref="supplierCustomerGroup"
               />
             </div>
           </div>
@@ -97,8 +142,18 @@
                 class="w2/5"
                 style="padding-right: 6px"
                 idInput="add__dob"
-                labelText="Ngày sinh"
+                :labelText="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInput.dateOfBirth'
+                  )
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.dateOfBirth'
+                  )
+                "
                 tabindex="6"
+                ref="dateOfBirth"
               />
               <misa-radio-input
                 :errorText="errorTextEmployeeData.gender"
@@ -107,10 +162,18 @@
                 nameRadioGroup="add__gender"
                 :align="'row'"
                 type="text"
-                labelText="Giới tính"
+                :labelText="
+                  $t('employeeSubsystem.addEmployeePopup.labelInput.gender')
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.gender'
+                  )
+                "
                 class="w3/5"
                 style="padding-left: 10px"
                 tabindex="7"
+                ref="gender"
               />
             </div>
             <div class="flex-row p-b-8">
@@ -119,10 +182,20 @@
                 v-model="addEmployeeData.identityNumber"
                 type="text"
                 idInput="add__indentity-number"
-                labelText="Số CMND"
+                :labelText="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInput.identityNumber'
+                  )
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.identityNumber'
+                  )
+                "
                 class="w3/5"
                 style="padding-right: 6px"
                 tabindex="8"
+                ref="identityNumber"
               />
               <misa-date-picker
                 :errorText="errorTextEmployeeData.identityDate"
@@ -130,8 +203,18 @@
                 class="w2/5"
                 style="padding-right: 6px"
                 idInput="add__indentity-date"
-                labelText="Ngày cấp"
+                :labelText="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInput.identityDate'
+                  )
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.identityDate'
+                  )
+                "
                 tabindex="9"
+                ref="identityDate"
               />
             </div>
             <div class="flex-row p-b-8">
@@ -140,9 +223,19 @@
                 v-model="addEmployeeData.identityPlace"
                 type="text"
                 idInput="add__identity-place"
-                labelText="Nơi cấp"
+                :labelText="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInput.identityPlace'
+                  )
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.identityPlace'
+                  )
+                "
                 class="w1"
                 tabindex="10"
+                ref="identityPlace"
               />
             </div>
             <div v-show="isCustomer || isSupplier" class="flex-row p-b-8">
@@ -152,10 +245,20 @@
                 v-show="isCustomer"
                 type="text"
                 idInput="add__employee-code"
-                labelText="TK công nợ phải thu"
+                :labelText="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInput.receiveAccount'
+                  )
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.receiveAccount'
+                  )
+                "
                 style="padding-right: 8px"
                 class="w1/2"
                 tabindex="11"
+                ref="receiveAccount"
               />
               <misa-textfield
                 :errorText="errorTextEmployeeData.payAccount"
@@ -163,9 +266,17 @@
                 v-show="isSupplier"
                 type="text"
                 idInput="add__employee-code"
-                labelText="TK công nợ phải trả"
+                :labelText="
+                  $t('employeeSubsystem.addEmployeePopup.labelInput.payAccount')
+                "
+                :labelTooltip="
+                  $t(
+                    'employeeSubsystem.addEmployeePopup.labelInputTooltip.payAccount'
+                  )
+                "
                 class="w1/2"
                 tabindex="12"
+                ref="payAccount"
               />
             </div>
           </div>
@@ -184,7 +295,10 @@
               @click="
                 currentMoreInfo = this.$_MISAEnum.MORE_INFO_NAV.SALARY_INFO
               "
-              >Thông tin tiền lương</misa-button
+              tooltip="CTRL + 1"
+              >{{
+                $t("employeeSubsystem.addEmployeePopup.moreInfoNav.salaryInfo")
+              }}</misa-button
             >
             <misa-button
               type="sub"
@@ -196,7 +310,10 @@
                   : ''
               "
               @click="currentMoreInfo = this.$_MISAEnum.MORE_INFO_NAV.BANK_INFO"
-              >Thông tin ngân hàng</misa-button
+              tooltip="CTRL + 2"
+              >{{
+                $t("employeeSubsystem.addEmployeePopup.moreInfoNav.bankInfo")
+              }}</misa-button
             >
             <misa-button
               type="sub"
@@ -209,7 +326,10 @@
               @click="
                 currentMoreInfo = this.$_MISAEnum.MORE_INFO_NAV.CONTACT_INFO
               "
-              >Thông tin liên hệ</misa-button
+              tooltip="CTRL + 3"
+              >{{
+                $t("employeeSubsystem.addEmployeePopup.moreInfoNav.contactInfo")
+              }}</misa-button
             >
           </div>
           <div class="more-info__content">
@@ -225,27 +345,55 @@
                   v-model="addEmployeeData.salary"
                   type="money"
                   idInput="add__salary"
-                  labelText="Lương thỏa thuận"
+                  :labelText="
+                    $t('employeeSubsystem.addEmployeePopup.labelInput.salary')
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.salary'
+                    )
+                  "
                   class="w1/4 p-r-12"
                   tabindex="13"
+                  ref="salary"
                 />
                 <misa-textfield
                   :errorText="errorTextEmployeeData.salaryCoefficients"
                   v-model="addEmployeeData.salaryCoefficients"
                   type="money"
                   idInput="add__salary-coefficients"
-                  labelText="Hệ số lương"
+                  :labelText="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInput.salaryCoefficients'
+                    )
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.salaryCoefficients'
+                    )
+                  "
                   class="w1/6 p-r-12"
                   tabindex="14"
+                  ref="salaryCoefficients"
                 />
                 <misa-textfield
                   :errorText="errorTextEmployeeData.salaryPaidForInsurance"
                   v-model="addEmployeeData.salaryPaidForInsurance"
                   type="money"
                   idInput="add__salary-paid-for-insurance"
-                  labelText="Lương đóng bảo hiểm"
+                  :labelText="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInput.salaryPaidForInsurance'
+                    )
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.salaryPaidForInsurance'
+                    )
+                  "
                   class="w1/3 p-r-12"
                   tabindex="15"
+                  ref="salaryPaidForInsurance"
                 />
               </div>
 
@@ -255,28 +403,58 @@
                   v-model="addEmployeeData.personalTaxCode"
                   type="text"
                   idInput="add__personal-tax-code"
-                  labelText="Mã số thuế"
+                  :labelText="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInput.personalTaxCode'
+                    )
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.personalTaxCode'
+                    )
+                  "
                   class="w1/4 p-r-12"
                   tabindex="16"
+                  ref="personalTaxCode"
                 />
                 <misa-textfield
                   :errorText="errorTextEmployeeData.typeOfContract"
                   v-model="addEmployeeData.typeOfContract"
                   type="text"
                   idInput="add__type-of-contract"
-                  labelText="Loại hợp đồng"
+                  :labelText="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInput.typeOfContract'
+                    )
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.typeOfContract'
+                    )
+                  "
                   class="w1/2 p-r-12"
                   tabindex="17"
+                  ref="typeOfContract"
                 />
                 <misa-textfield
                   :errorText="errorTextEmployeeData.numberOfDependents"
                   v-model="addEmployeeData.numberOfDependents"
                   type="number_no_dot"
                   idInput="add__number-of-dependents"
-                  labelText="Số người phụ thuộc"
+                  :labelText="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInput.numberOfDependents'
+                    )
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.numberOfDependents'
+                    )
+                  "
                   :haveButtonFunction="true"
                   class="w1/6 p-r-12"
                   tabindex="18"
+                  ref="numberOfDependents"
                 />
               </div>
             </div>
@@ -292,36 +470,72 @@
                   v-model="addEmployeeData.accountNumber"
                   type="text"
                   idInput="add__account-number"
-                  labelText="Số tài khoản"
+                  :labelText="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInput.accountNumber'
+                    )
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.accountNumber'
+                    )
+                  "
                   class="w1/6 p-r-12"
                   tabindex="13"
+                  ref="accountNumber"
                 />
                 <misa-textfield
                   :errorText="errorTextEmployeeData.bankName"
                   v-model="addEmployeeData.bankName"
                   type="text"
                   idInput="add__bank-name"
-                  labelText="Tên ngân hàng"
+                  :labelText="
+                    $t('employeeSubsystem.addEmployeePopup.labelInput.bankName')
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.bankName'
+                    )
+                  "
                   class="w1/4 p-r-12"
                   tabindex="14"
+                  ref="bankName"
                 />
                 <misa-textfield
                   :errorText="errorTextEmployeeData.bankBranch"
                   v-model="addEmployeeData.bankBranch"
                   type="text"
                   idInput="add__bank-branch"
-                  labelText="Chi nhánh"
+                  :labelText="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInput.bankBranch'
+                    )
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.bankBranch'
+                    )
+                  "
                   class="w1/5 p-r-12"
                   tabindex="15"
+                  ref="bankBranch"
                 />
                 <misa-textfield
                   :errorText="errorTextEmployeeData.bankProvince"
                   v-model="addEmployeeData.bankProvince"
                   type="text"
                   idInput="add__bank-province"
-                  labelText="Tỉnh/TP của ngân hàng"
+                  :labelText="
+                    $t('employeeSubsystem.addEmployeePopup.labelInput.bankCity')
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.bankCity'
+                    )
+                  "
                   class="w1/3 p-r-12"
                   tabindex="16"
+                  ref="bankProvince"
                 />
               </div>
             </div>
@@ -337,9 +551,19 @@
                   v-model="addEmployeeData.contactAddress"
                   type="text"
                   idInput="add__address"
-                  labelText="Địa chỉ"
+                  :labelText="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInput.contactAddress'
+                    )
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.contactAddress'
+                    )
+                  "
                   class="w1"
                   tabindex="13"
+                  ref="contactAddress"
                 />
               </div>
               <div class="flex-row w1 p-b-8">
@@ -348,27 +572,57 @@
                   v-model="addEmployeeData.contactPhoneNumber"
                   type="text"
                   idInput="add__phone-number"
-                  labelText="ĐT di động"
+                  :labelText="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInput.contactPhoneNumber'
+                    )
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.contactPhoneNumber'
+                    )
+                  "
                   class="w1/4 p-r-12"
                   tabindex="14"
+                  ref="contactPhoneNumber"
                 />
                 <misa-textfield
                   :errorText="errorTextEmployeeData.contactLandlinePhoneNumber"
                   v-model="addEmployeeData.contactLandlinePhoneNumber"
                   type="text"
                   idInput="add__landline-phone-number"
-                  labelText="ĐT cố định"
+                  :labelText="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInput.contactLandlinePhoneNumber'
+                    )
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.contactLandlinePhoneNumber'
+                    )
+                  "
                   class="w1/4 p-r-12"
                   tabindex="15"
+                  ref="contactLandlinePhoneNumber"
                 />
                 <misa-textfield
                   :errorText="errorTextEmployeeData.contactEmail"
                   v-model="addEmployeeData.contactEmail"
                   type="text"
                   idInput="add__email"
-                  labelText="Email"
+                  :labelText="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInput.contactEmail'
+                    )
+                  "
+                  :labelTooltip="
+                    $t(
+                      'employeeSubsystem.addEmployeePopup.labelInputTooltip.contactEmail'
+                    )
+                  "
                   class="w1/4 p-r-12"
                   tabindex="16"
+                  ref="contactEmail"
                 />
               </div>
             </div>
@@ -390,7 +644,7 @@
               tabindex="20"
               borderRadius="var(--border-radius-default)"
               @clickBtnContainer="$emit('clickCancelBtn')"
-              >Hủy</misa-button
+              >{{ $t("common.button.cancel") }}</misa-button
             >
           </div>
           <div>
@@ -402,8 +656,8 @@
               style="margin-right: 10px"
               @clickBtnContainer="storeBtnClick"
               ref="storeBtn"
-              tooltip="Cất (Ctrl + S)"
-              >Cất</misa-button
+              :tooltip="$t('common.buttonTooltip.store')"
+              >{{ $t("common.button.store") }}</misa-button
             >
             <misa-button
               type="main"
@@ -413,60 +667,36 @@
               @clickBtnContainer="storeAndAddBtnClick"
               @keydown="onStoreAndAddBtnKeyDown"
               ref="storeAndAddBtn"
-              tooltip="Cất và thêm (Ctrl + Shift + S)"
-              >Cất và Thêm</misa-button
+              :tooltip="$t('common.buttonTooltip.storeAndAdd')"
+              >{{ $t("common.button.storeAndAdd") }}</misa-button
             >
           </div>
         </div>
       </template>
     </misa-popup>
 
-    <div
+    <misa-error-popup
       v-if="isShowDialogError"
-      class="m-overlay"
-      id="add-employee-popup--error"
-    >
-      <misa-popup
-        :haveHeader="false"
-        width="444px"
-        height="auto"
-        style="padding: 16px 20px 10px"
-      >
-        <template #content__input-control>
-          <div
-            style="
-              display: flex;
-              align-items: center;
-              column-gap: 26px;
-              padding-top: 8px;
-            "
-          >
-            <misa-icon height="auto" width="auto" icon="error--medium" />
-            <span>{{ getFirstError.errorText }}</span>
-          </div>
-        </template>
+      :errorText="getFirstError.errorText"
+      @close-click="closeBtnDialogErrorClick"
+    />
 
-        <template #footer>
-          <misa-separation-line
-            style="
-              border-color: var(--border-color-default);
-              margin: 16px 0px 10px;
-            "
-          />
-          <div style="width: 100%; display: flex; justify-content: center">
-            <misa-button
-              type="main"
-              width="58px"
-              borderRadius="var(--border-radius-default)"
-              padding="0px 12px"
-              @clickBtnContainer="closeBtnDialogErrorClick"
-              ref="closeBtnDialogError"
-              >Đóng</misa-button
-            >
-          </div>
-        </template>
-      </misa-popup>
-    </div>
+    <misa-out-confirm-popup
+      @cancel-click="
+        () => {
+          isShowOutConfirmPopup = false;
+          $refs.employeeCode.focus();
+        }
+      "
+      @no-click="$emit('clickCancelBtn')"
+      @yes-click="
+        () => {
+          isShowOutConfirmPopup = false;
+          storeBtnClick();
+        }
+      "
+      v-if="isShowOutConfirmPopup"
+    />
 
     <misa-loading-spinner v-if="isLoading" size="large" />
   </div>
@@ -475,7 +705,15 @@
 <script>
 import DepartmentService from "@/service/DepartmentService.js";
 import EmployeeService from "@/service/EmployeeService.js";
-import { findIndexByAttribute, generateUuid } from "@/helper/common.js";
+import { ValidateConfig } from "@/config/config.js";
+import { findIndexByAttribute, isObjectEmpty } from "@/helper/common.js";
+import {
+  lengthValidate,
+  emptyValidate,
+  regexValidate,
+} from "@/helper/validate.js";
+import { CommonErrorHandle } from "@/helper/error-handle";
+import { capitalizeFirstLetter } from "@/helper/format-helper";
 
 export default {
   name: "AddEmployeePopup",
@@ -485,26 +723,21 @@ export default {
     },
   },
 
-  created() {
+  async created() {
     window.addEventListener("keydown", this.handleKeydown);
 
     //cập nhật thông tin cho form: form_mode, data
     this.addInfoForm();
 
     //lấy dữ liệu phòng ban
-    this.getDepartments();
+    await this.getDepartments();
+
+    this.copyAddEmployeeData = JSON.parse(JSON.stringify(this.addEmployeeData));
   },
 
   mounted() {
     //foucs vào employee code lần đầu mở form
     this.$refs.employeeCode.focus();
-  },
-
-  updated() {
-    //focus vào button đóng ở dialog lỗi khi hiện dialog lỗi lên
-    if (this.isShowDialogError) {
-      this.$refs.closeBtnDialogError.focusButtonContainer();
-    }
   },
 
   unmounted() {
@@ -513,6 +746,7 @@ export default {
 
   data() {
     return {
+      isShowOutConfirmPopup: false,
       isShowDialogError: false,
       isLoading: false,
 
@@ -526,15 +760,15 @@ export default {
       genderOptions: [
         {
           id: this.$_MISAEnum.GENDER.MALE,
-          name: "Nam",
+          name: this.$t("common.gender.male"),
         },
         {
           id: this.$_MISAEnum.GENDER.FEMALE,
-          name: "Nữ",
+          name: this.$t("common.gender.female"),
         },
         {
-          id: this.$_MISAEnum.GENDER.ORTHER,
-          name: "Khác",
+          id: this.$_MISAEnum.GENDER.OTHER,
+          name: this.$t("common.gender.other"),
         },
       ],
 
@@ -579,6 +813,66 @@ export default {
         contactEmail: "",
         contactPhoneNumber: "",
         contactLandlinePhoneNumber: "",
+      },
+
+      /**
+       * Dùng để kiểm tra thay đổi của addEmployeeData
+       * do vue sẽ lưu tham chiếu nên không ktra trực tiếp
+       * được ở watch
+       */
+      copyAddEmployeeData: {},
+
+      /**
+       * xác định những loại validate của từng trường
+       * các validate cách nhau bởi dấu ,
+       * các loại validate:
+       *  +) Empty
+       *  +) MaxLength20, MaxLength25, MaxLength50, MaxLength100, MaxLength255
+       *  +) NotGreaterThanToday
+       *  +) PhoneNumber
+       *  +) OnlyNumbers
+       */
+      validateEmployeeData: {
+        employeeId: "",
+        employeeCode: "Empty, MaxLength20",
+        fullName: "Empty, MaxLength100",
+        gender: "",
+        dateOfBirth: "NotGreaterThanToday",
+
+        identityNumber: "MaxLength25, OnlyNumbers",
+        identityDate: "NotGreaterThanToday",
+        identityPlace: "MaxLength255",
+
+        departmentId: "Empty",
+        departmentCode: "",
+        departmentName: "",
+
+        supplierCustomerGroup: "MaxLength255",
+        payAccount: "MaxLength100",
+        receiveAccount: "MaxLength100",
+
+        position: "MaxLength100",
+
+        /* thông tin tiền lương */
+        salary: "",
+        salaryPaidForInsurance: "",
+        salaryCoefficients: "",
+
+        personalTaxCode: "MaxLength25",
+        typeOfContract: "MaxLength255",
+        numberOfDependents: "",
+
+        /* tài khoản ngân hàng */
+        accountNumber: "MaxLength25",
+        bankName: "MaxLength255",
+        bankBranch: "MaxLength255",
+        bankProvince: "MaxLength255",
+
+        /* thông tin liên hệ */
+        contactAddress: "MaxLength255",
+        contactEmail: "MaxLength50, Email",
+        contactPhoneNumber: "MaxLength50, PhoneNumber",
+        contactLandlinePhoneNumber: "MaxLength100, PhoneNumber",
       },
 
       errorTextEmployeeData: {
@@ -627,7 +921,9 @@ export default {
       departmentColumnsInfo: [
         {
           id: "DepartmentCode",
-          name: "Mã đơn vị",
+          name: this.$t(
+            "employeeSubsystem.addEmployeePopup.departmentColumnsInfo.code"
+          ),
           size: "50px",
           textAlign: "left",
           format: "text",
@@ -636,7 +932,9 @@ export default {
         },
         {
           id: "DepartmentName",
-          name: "Tên đơn vị",
+          name: this.$t(
+            "employeeSubsystem.addEmployeePopup.departmentColumnsInfo.name"
+          ),
           size: "150px",
           textAlign: "left",
           format: "text",
@@ -650,6 +948,43 @@ export default {
 
   methods: {
     /**
+     * thực hiện kiểm tra trước khi đóng form
+     * @author: TTANH (07/08/2023)
+     */
+    closeAddForm() {
+      if (this.formMode == this.$_MISAEnum.FORM_MODE.ADD) {
+        this.isShowOutConfirmPopup = true;
+      } else {
+        let difference = false;
+
+        for (let attr in this.addEmployeeData) {
+          let Attr = capitalizeFirstLetter(attr);
+
+          let newData = this.addEmployeeData[attr];
+          let oldData = this.dataUpdate[Attr];
+
+          if (
+            ((newData == "" || newData == null) &&
+              (oldData == "" || oldData == null)) ||
+            attr == "departmentCode" ||
+            attr == "departmentName"
+          ) {
+          } else {
+            if (oldData !== newData) {
+              difference = true;
+            }
+          }
+        }
+
+        if (difference) {
+          this.isShowOutConfirmPopup = true;
+        } else {
+          this.$emit("clickCancelBtn");
+        }
+      }
+    },
+
+    /**
      * thực hiện get dữ liệu phòng ban
      * @author: TTANH (30/06/2023)
      */
@@ -660,11 +995,7 @@ export default {
         if (res.success) {
           this.departments = res.data;
         } else {
-          this.$store.commit("addToast", {
-            type: "error",
-            text: this.$_MISAResource[this.$store.state.langCode]
-              .DepartmentError.Error,
-          });
+          CommonErrorHandle();
         }
       } catch (error) {
         console.log(
@@ -695,6 +1026,21 @@ export default {
     },
 
     /**
+     * thay đổi form cập nhật thành form thêm mới cho chức năng nhân bản
+     * @author: TTANH (01/07/2023)
+     */
+    changeFormModeToAdd() {
+      try {
+        this.formMode = this.$_MISAEnum.FORM_MODE.ADD;
+      } catch (error) {
+        console.log(
+          "🚀 ~ file: AddEmployeePopup.vue:675 ~ changeFormModeToAdd ~ error:",
+          error
+        );
+      }
+    },
+
+    /**
      * lấy employee code mới
      * @author: TTANH (01/07/2023)
      */
@@ -706,10 +1052,10 @@ export default {
           this.addEmployeeData.employeeCode = res.data;
         } else {
           this.isShowDialogError = true;
-          this.errorTextEmployeeData.employeeCode =
-            this.$_MISAResource[
-              this.$store.state.langCode
-            ].CustomerCodeInvalidError.NewCodeError;
+
+          this.errorTextEmployeeData.employeeCode = this.$t(
+            "errorHandle.employeeSubsystem.addEmployeePopup.newCodeError"
+          );
         }
       } catch (error) {
         console.log(
@@ -758,6 +1104,7 @@ export default {
         let isSuccess = await this.createNewEmployee();
 
         if (isSuccess) {
+          this.formMode = this.$_MISAEnum.FORM_MODE.ADD;
           this.resetAddEmployeeData();
           this.$refs.employeeCode.focus();
           this.$emit("reloadData");
@@ -791,6 +1138,8 @@ export default {
             }
           } else if (this.addEmployeeData[key]) {
             dataSendApi[key] = this.addEmployeeData[key];
+          } else {
+            dataSendApi[key] = null;
           }
         }
 
@@ -800,20 +1149,23 @@ export default {
           if (res.success) {
             this.$store.commit("addToast", {
               type: "success",
-              text: this.$_MISAResource[this.$store.state.langCode].AddEmployee
-                .Success,
+              text: this.$t(
+                "successHandle.employeeSubsystem.addEmployeePopup.add"
+              ),
             });
           } else {
-            this.$store.commit("addToast", {
-              type: "error",
-              text: res.userMsg,
-            });
-
             if (
               res.errorCode === this.$_MISAEnum.ERROR_CODE.CODE_DUPLICATE ||
               res.errorCode === this.$_MISAEnum.ERROR_CODE.WRONG_FORMAT_CODE
             ) {
+              this.$store.commit("addToast", {
+                type: "error",
+                text: res.userMsg,
+              });
+
               this.$refs.employeeCode.focus();
+            } else {
+              CommonErrorHandle();
             }
 
             isSuccess = false;
@@ -827,20 +1179,23 @@ export default {
           if (res.success) {
             this.$store.commit("addToast", {
               type: "success",
-              text: this.$_MISAResource[this.$store.state.langCode]
-                .UpdateEmployee.Success,
+              text: this.$t(
+                "successHandle.employeeSubsystem.addEmployeePopup.update"
+              ),
             });
           } else {
-            this.$store.commit("addToast", {
-              type: "error",
-              text: res.devMsg,
-            });
-
             if (
               res.errorCode === this.$_MISAEnum.ERROR_CODE.CODE_DUPLICATE ||
               res.errorCode === this.$_MISAEnum.ERROR_CODE.WRONG_FORMAT_CODE
             ) {
+              this.$store.commit("addToast", {
+                type: "error",
+                text: res.userMsg,
+              });
+
               this.$refs.employeeCode.focus();
+            } else {
+              CommonErrorHandle();
             }
 
             isSuccess = false;
@@ -851,8 +1206,141 @@ export default {
         return isSuccess;
       } else {
         this.isShowDialogError = true;
-        this.$refs.storeBtn.focusout();
-        this.$refs.storeAndAddBtn.focusout();
+      }
+    },
+
+    /**
+     * kiểm tra chung
+     * @param {string} feildCheck:
+     *    trường muốn kiểm tra,
+     *    để trống nếu muốn kiểm tra tất cả
+     * @author: TTANH (29/07/2023)
+     */
+    commonValidate(feildCheck = "") {
+      for (let property in this.validateEmployeeData) {
+        let nameField = this.$t(
+          `employeeSubsystem.addEmployeePopup.nameField.${property}`
+        );
+
+        let valuePropValidateEmployeeData = this.validateEmployeeData[property];
+
+        if (valuePropValidateEmployeeData === "") {
+          continue;
+        } else if (feildCheck == "" || feildCheck == property) {
+          // replace: xóa hết khoảng cách
+          let validatesProp = valuePropValidateEmployeeData
+            .replace(/\s+/, "")
+            .trim()
+            .split(",");
+          let isValidate = true;
+
+          validatesProp.forEach((validate) => {
+            if (validate.includes("Empty")) {
+              let errorText = emptyValidate(
+                this.addEmployeeData[property],
+                nameField,
+                this.$store.state.langCode
+              );
+
+              if (errorText !== "") {
+                this.errorTextEmployeeData[property] = errorText;
+                isValidate = false;
+              }
+            } else if (validate.includes("MaxLength")) {
+              let errorText = lengthValidate(
+                this.addEmployeeData[property],
+                ValidateConfig[validate],
+                0,
+                nameField,
+                this.$store.state.langCode
+              );
+
+              if (errorText !== "") {
+                this.errorTextEmployeeData[property] = errorText;
+                isValidate = false;
+              }
+            } else if (validate.includes("NotGreaterThanToday")) {
+              if (this.addEmployeeData[property]) {
+                const checkDate = new Date(this.addEmployeeData[property]);
+                const today = new Date();
+
+                checkDate.setHours(0, 0, 0, 0);
+                today.setHours(0, 0, 0, 0);
+
+                if (checkDate > today) {
+                  this.errorTextEmployeeData[property] = this.$t(
+                    "errorHandle.employeeSubsystem.addEmployeePopup.dateNotGreaterThanToday",
+                    { name: nameField }
+                  );
+                  isValidate = false;
+                } else {
+                  this.errorTextEmployeeData[property] = "";
+                }
+              }
+            } else if (validate.includes("Email")) {
+              let errorText = regexValidate(
+                this.addEmployeeData[property],
+                nameField,
+                ValidateConfig.EmailRegex,
+                this.$store.state.langCode
+              );
+
+              if (errorText !== "") {
+                this.errorTextEmployeeData[property] = errorText;
+                isValidate = false;
+              }
+            } else if (validate.includes("PhoneNumber")) {
+              let errorText = regexValidate(
+                this.addEmployeeData[property],
+                nameField,
+                ValidateConfig.PhoneNumberRegex,
+                this.$store.state.langCode
+              );
+
+              if (errorText !== "") {
+                this.errorTextEmployeeData[property] = errorText;
+                isValidate = false;
+              }
+            } else if (validate.includes("OnlyNumbers")) {
+              let errorText = regexValidate(
+                this.addEmployeeData[property],
+                nameField,
+                ValidateConfig.OnlyNumbersRegex,
+                this.$store.state.langCode
+              );
+
+              if (errorText !== "") {
+                this.errorTextEmployeeData[property] = errorText;
+                isValidate = false;
+              }
+            }
+          });
+
+          if (isValidate) {
+            this.errorTextEmployeeData[property] = "";
+          }
+        }
+      }
+    },
+
+    /**
+     * kiểm tra thêm đơn vị
+     * @author: TTANH (29/07/2023)
+     */
+    departmentValidate() {
+      // không tìm thấy
+      if (this.$refs.departmentId.getCurrentInputValue() !== "") {
+        if (
+          findIndexByAttribute(
+            this.departments,
+            "DepartmentId",
+            this.addEmployeeData.departmentId
+          ) === -1
+        ) {
+          this.errorTextEmployeeData.departmentId = this.$t(
+            "errorHandle.employeeSubsystem.addEmployeePopup.departmentNotFound"
+          );
+        }
       }
     },
 
@@ -863,60 +1351,22 @@ export default {
      */
     validateData() {
       try {
-        let isValidate = true;
-
         this.resetErrorText();
 
-        //không được để trống
-        if (this.addEmployeeData.employeeCode === "") {
-          this.errorTextEmployeeData.employeeCode =
-            this.$_MISAResource[
-              this.$store.state.langCode
-            ].CustomerCodeInvalidError.Empty;
+        // kiểm tra những validate chung
+        this.commonValidate();
 
-          isValidate = false;
-        }
+        // kiểm tra riêng từng trường
+        this.departmentValidate();
 
-        if (this.addEmployeeData.fullName === "") {
-          this.errorTextEmployeeData.fullName =
-            this.$_MISAResource[
-              this.$store.state.langCode
-            ].FullNameInvalidError.Empty;
-
-          isValidate = false;
-        }
-
-        if (this.addEmployeeData.departmentId === "") {
-          this.errorTextEmployeeData.departmentId =
-            this.$_MISAResource[
-              this.$store.state.langCode
-            ].DepartmentInvalidError.Empty;
-
-          isValidate = false;
-        }
-
-        // không tìm thấy
-        if (this.$refs.departmentId.getCurrentInputValue() !== "") {
-          if (
-            findIndexByAttribute(
-              this.departments,
-              "DepartmentId",
-              this.addEmployeeData.departmentId
-            ) === -1
-          ) {
-            this.errorTextEmployeeData.departmentId =
-              this.$_MISAResource[
-                this.$store.state.langCode
-              ].DepartmentInvalidError.NotFound;
-
-            isValidate = false;
+        // kiểm tra tất cả các giá trị có lỗi không
+        for (let property in this.errorTextEmployeeData) {
+          if (this.errorTextEmployeeData[property] !== "") {
+            return false;
           }
         }
 
-        //đúng định dạng
-        //ngày tháng
-
-        return isValidate;
+        return true;
       } catch (error) {
         console.log(
           "🚀 ~ file: AddEmployeePopup.vue:509 ~ validateData ~ error:",
@@ -948,8 +1398,18 @@ export default {
      */
     resetAddEmployeeData() {
       try {
+        this.copyAddEmployeeData = {};
+
         for (let attr in this.addEmployeeData) {
           this.addEmployeeData[attr] = "";
+        }
+
+        if (this.$refs.identityDate) {
+          this.$refs.identityDate.resetDatePicked();
+        }
+
+        if (this.$refs.dateOfBirth) {
+          this.$refs.dateOfBirth.resetDatePicked();
         }
 
         if (this.$refs.departmentId) {
@@ -972,7 +1432,6 @@ export default {
         this.isShowDialogError = false;
 
         this.$refs[this.getFirstError.errorAttr].focus();
-        this.$refs.closeBtnDialogError.focusout();
       } catch (error) {
         console.log(
           "🚀 ~ file: AddEmployeePopup.vue:777 ~ closeBtnDialogErrorClick ~ error:",
@@ -999,21 +1458,50 @@ export default {
     handleKeydown(event) {
       event.stopPropagation();
 
-      if (event.keyCode === this.$_MISAEnum.KEY_CODE.ESC) {
-        this.$emit("closeAddEmployeePopup");
-      } else if (
-        event.keyCode === this.$_MISAEnum.KEY_CODE.S &&
-        event.shiftKey &&
-        event.ctrlKey
-      ) {
-        event.preventDefault();
-        this.storeAndAddBtnClick();
-      } else if (
-        event.keyCode === this.$_MISAEnum.KEY_CODE.S &&
-        event.ctrlKey
-      ) {
-        event.preventDefault();
-        this.storeBtnClick();
+      if (!this.isShowDialogError && !this.isShowOutConfirmPopup) {
+        if (event.keyCode === this.$_MISAEnum.KEY_CODE.ESC) {
+          this.closeAddForm();
+        } else if (
+          event.keyCode === this.$_MISAEnum.KEY_CODE.S &&
+          event.shiftKey &&
+          event.ctrlKey
+        ) {
+          event.preventDefault();
+          this.storeAndAddBtnClick();
+        } else if (
+          event.keyCode === this.$_MISAEnum.KEY_CODE.S &&
+          event.ctrlKey
+        ) {
+          event.preventDefault();
+          this.storeBtnClick();
+        } else if (
+          event.keyCode === this.$_MISAEnum.KEY_CODE["1"] &&
+          event.ctrlKey
+        ) {
+          event.preventDefault();
+          this.currentMoreInfo = this.$_MISAEnum.MORE_INFO_NAV.SALARY_INFO;
+          this.$nextTick(() => {
+            this.$refs.salary.focus();
+          });
+        } else if (
+          event.keyCode === this.$_MISAEnum.KEY_CODE["2"] &&
+          event.ctrlKey
+        ) {
+          event.preventDefault();
+          this.currentMoreInfo = this.$_MISAEnum.MORE_INFO_NAV.BANK_INFO;
+          this.$nextTick(() => {
+            this.$refs.accountNumber.focus();
+          });
+        } else if (
+          event.keyCode === this.$_MISAEnum.KEY_CODE["3"] &&
+          event.ctrlKey
+        ) {
+          event.preventDefault();
+          this.currentMoreInfo = this.$_MISAEnum.MORE_INFO_NAV.CONTACT_INFO;
+          this.$nextTick(() => {
+            this.$refs.contactAddress.focus();
+          });
+        }
       }
     },
 
@@ -1124,16 +1612,29 @@ export default {
     },
   },
   watch: {
-    "addEmployeeData.employeeCode": function () {
-      this.errorTextEmployeeData.employeeCode = "";
-    },
-
-    "addEmployeeData.fullName": function () {
-      this.errorTextEmployeeData.fullName = "";
-    },
-
     "addEmployeeData.departmentId": function (newValue) {
       this.updateDepartmentInfo(newValue);
+    },
+
+    addEmployeeData: {
+      handler: function (newValue) {
+        if (!isObjectEmpty(this.copyAddEmployeeData)) {
+          for (let property in this.addEmployeeData) {
+            if (newValue[property] !== this.copyAddEmployeeData[property]) {
+              this.commonValidate(property);
+
+              if (property == "departmentId") {
+                this.departmentValidate();
+              }
+            }
+          }
+        }
+
+        if (this.copyAddEmployeeData)
+          this.copyAddEmployeeData = JSON.parse(JSON.stringify(newValue));
+      },
+
+      deep: true,
     },
   },
 };

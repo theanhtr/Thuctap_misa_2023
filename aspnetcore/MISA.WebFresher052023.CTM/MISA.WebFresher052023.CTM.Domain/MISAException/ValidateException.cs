@@ -10,7 +10,7 @@
         /// <summary>
         /// Mã lỗi
         /// </summary>
-        public int ErrorCode { get; set; }
+        public StatusErrorCode ErrorCode { get; set; }
 
         /// <summary>
         /// Thông tin lỗi
@@ -25,7 +25,7 @@
 
         #region Constructor
         public ValidateException() { }
-        public ValidateException(int errorCode, string? errors, object? data)
+        public ValidateException(StatusErrorCode errorCode, string? errors, object? data)
         {
             ErrorCode = errorCode;
             ErrorMessage = errors;

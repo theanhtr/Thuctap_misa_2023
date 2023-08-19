@@ -14,6 +14,9 @@ namespace MISA.WebFresher052023.CTM.Application
             CreateMap<Employee, EmployeeDto>();
             CreateMap<EmployeeCreateDto, Employee>();
             CreateMap<EmployeeUpdateDto, Employee>();
+            CreateMap<EmployeeExcelDto, Employee>();
+            CreateMap<EmployeeExcelDto, EmployeeCreateDto>();
+            CreateMap<EmployeeExcelDto, EmployeeUpdateDto>();
         }
     }
 }

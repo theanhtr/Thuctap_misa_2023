@@ -1,21 +1,51 @@
 import { createRouter, createWebHistory } from "vue-router";
-import EmployeeList from "../views/employee/employee-list/EmployeeList.vue";
+
+import MainLayout from "../components/layout/MainLayout.vue";
 import Dashboard from "../views/dashboard/Dashboard.vue";
+import EmployeeList from "../views/employee/employee-list/EmployeeList.vue";
+
+import ImportLayout from "../components/layout/import-layout/ImportLayout.vue";
+import EmployeeImport from "../views/employee/employee-import/EmployeeImport.vue";
+import MISAPageNotFound from "../components/layout/MISAPageNotFound.vue";
 
 const routes = [
   {
     path: "/",
-    redirect: "/employee",
+    redirect: "/app/employee",
   },
   {
-    path: "/dashboard",
-    name: "dashboard",
-    component: Dashboard,
+    path: "/app",
+    name: "app",
+    component: MainLayout,
+    children: [
+      {
+        path: "/app/dashboard",
+        name: "dashboard-app",
+        component: Dashboard,
+      },
+      {
+        path: "/app/employee",
+        name: "employee-app",
+        component: EmployeeList,
+      },
+    ],
   },
   {
-    path: "/employee",
-    name: "employee",
-    component: EmployeeList,
+    path: "/import",
+    name: "import",
+    component: ImportLayout,
+    children: [
+      {
+        path: "/app/employee/import",
+        name: "employee-import",
+        component: EmployeeImport,
+      },
+    ],
+  },
+  {
+    path: "/:pathMatch(.*)*",
+    name: "NotFound",
+    component: MISAPageNotFound,
   },
 ];
 

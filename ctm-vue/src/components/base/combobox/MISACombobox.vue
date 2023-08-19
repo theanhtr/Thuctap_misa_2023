@@ -25,6 +25,8 @@
         @keydown="handleInputKeydown"
         @focus="focusInput = true"
         :tabindex="tabindex"
+        :disabled="disableInput"
+        v-MISABlackenOut
       />
       <misa-icon
         @mouseenter="hoverDropdownIcon = true"
@@ -33,7 +35,7 @@
         :style="styleDropdownIcon"
         icon="dropdown--solid-black"
         scale="0.8"
-        height="96%"
+        height="99%"
       />
 
       <misa-tooltip v-if="errorText !== '' && hoverInput">{{
@@ -41,8 +43,11 @@
       }}</misa-tooltip>
     </div>
     <div v-show="isShowComboboxData" class="combobox__data" ref="comboboxData">
+      <div v-if="rowsData.length === 0" class="item--no-data">
+        Không có dữ liệu để hiển thị.
+      </div>
       <misa-table
-        v-if="type === 'table'"
+        v-else-if="type === 'table'"
         :columnsInfo="columnsInfo"
         :rowsData="computedRowsDataFilter"
         :oneRowSelect="true"
@@ -142,6 +147,9 @@ export default {
     tabindex: {
       default: "0",
     },
+    disableInput: {
+      default: false,
+    },
   },
   data() {
     return {
@@ -164,6 +172,11 @@ export default {
       indexHover: -1,
     };
   },
+
+  mounted() {
+    this.rowsDataFilter = this.rowsData;
+  },
+
   methods: {
     /**
      * hiển thị combobox data, focus vào input và thêm sự kiện click bên ngoài combobox
@@ -236,13 +249,15 @@ export default {
      */
     setValueInput(id = "") {
       try {
-        if (!id) {
+        if (id === null || id === "") {
           return;
         }
 
         for (let i = 0; i < this.rowsData.length; i++) {
           if (this.rowsData[i].id === id) {
-            this.$refs.inputSearch.value = this.rowsData[i].name;
+            if (this.$refs.inputSearch) {
+              this.$refs.inputSearch.value = this.rowsData[i].name;
+            }
             break;
           }
         }
@@ -261,9 +276,9 @@ export default {
      */
     selectValue(id) {
       try {
+        this.setValueInput(id);
         this.$emit("update:modelValue", id);
 
-        this.setValueInput(id);
         this.hiddenComboboxData();
       } catch (error) {
         console.log(
@@ -427,11 +442,15 @@ export default {
           event.keyCode === this.$_MISAEnum.KEY_CODE.ARROW_UP ||
           event.keyCode === this.$_MISAEnum.KEY_CODE.ARROW_DOWN
         ) {
-          this.$refs.comboboxData.scrollTo(0, this.indexHover * 20);
+          this.$refs.comboboxData.scrollTo(0, this.indexHover * 25);
 
           this.selectedRows = [this.computedRowsDataFilter[this.indexHover].id];
 
           this.setValueInput(this.computedRowsDataFilter[this.indexHover].id);
+
+          if (!this.isShowComboboxData) {
+            this.showComboboxData();
+          }
         }
       } catch (error) {
         console.log(
@@ -461,9 +480,7 @@ export default {
       return {
         width: this.widthInput,
         height: this.heightInput,
-        border: `${this.focusInput ? "2px" : "1px"} solid ${
-          this.borderInputColor
-        }`,
+        border: `1px solid ${this.borderInputColor}`,
       };
     },
 
@@ -494,9 +511,7 @@ export default {
       let indexFinded = -1;
 
       for (let i = 0; i < rowsDataLength; i++) {
-        if (
-          this.rowsData[i].id.toLowerCase() === this.modelValue.toLowerCase()
-        ) {
+        if (this.rowsData[i].id === this.modelValue) {
           indexFinded = i;
           break;
         }
@@ -516,8 +531,10 @@ export default {
   },
   watch: {
     rowsData() {
-      this.setValueInput(this.modelValue);
       this.rowsDataFilter = this.rowsData;
+    },
+    rowsDataFilter() {
+      this.setValueInput(this.modelValue);
     },
     modelValue() {
       this.selectedRows = [this.modelValue];

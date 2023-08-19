@@ -1,6 +1,12 @@
 <template>
   <div :style="styleContainer" class="input-container">
-    <label v-if="labelText !== ''" :for="idInput" class="label-input">
+    <label
+      :title="labelTooltip"
+      v-if="labelText !== ''"
+      :for="idInput"
+      class="label-input"
+      style="white-space: nowrap"
+    >
       {{ labelText }}
       <div v-if="inputRequired" style="color: red; padding-left: 3px">*</div>
     </label>
@@ -25,6 +31,7 @@
         :value="inputMiddleFormated"
         :placeholder="placeholder"
         :tabindex="tabindex"
+        v-MISABlackenOut
       />
 
       <div v-if="haveButtonFunction && !disable" class="input-function">
@@ -122,6 +129,9 @@ export default {
     },
     tabindex: {
       default: "0",
+    },
+    labelTooltip: {
+      default: "",
     },
   },
   methods: {
@@ -436,9 +446,7 @@ export default {
       return {
         width: this.widthInput,
         height: this.heightInput,
-        border: `${this.focusInput ? "2px" : "1px"} solid ${
-          this.borderInputColor
-        }`,
+        border: `1px solid ${this.borderInputColor}`,
       };
     },
 
