@@ -145,13 +145,7 @@ namespace MISA.WebFresher052023.CTM.Infrastructure
             //tăng chiều cao cho dòng 1: tên sheet và dòng 3: tên cột
             worksheet.Row(1).Height = 35;
             worksheet.Row(3).Height = 30;
-
-            var lastRowUsed = worksheet.LastRowUsed().RowNumber();
-            for (var i = 4; i <= lastRowUsed; i++)
-            {
-                worksheet.Row(i).Height = 26;
-            }
-
+            
             using var stream = new MemoryStream();
             workbook.SaveAs(stream);
             var content = stream.ToArray();

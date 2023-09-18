@@ -16,8 +16,6 @@ namespace MISA.WebFresher052023.CTM.Application.Tests
         private IMapper _mapper;
 
         private IEmployeeValidate _employeeValidate;
-
-        private IEmployeeLayoutService _employeeLayoutService;
         #endregion
 
         #region SetUp
@@ -26,15 +24,13 @@ namespace MISA.WebFresher052023.CTM.Application.Tests
         {
             _departmentRepository = Substitute.For<IDepartmentRepository>();
 
-            _employeeLayoutService = Substitute.For<IEmployeeLayoutService>();
-
             _employeeRepository = Substitute.For<IEmployeeRepository>();
 
             _mapper = Substitute.For<IMapper>();
 
             _employeeValidate = Substitute.For<IEmployeeValidate>();
 
-            _employeeService = new EmployeeService(_employeeRepository, _mapper, _employeeValidate, _departmentRepository, _employeeLayoutService);
+            _employeeService = new EmployeeService(_employeeRepository, _mapper, _employeeValidate, _departmentRepository);
         } 
         #endregion
 

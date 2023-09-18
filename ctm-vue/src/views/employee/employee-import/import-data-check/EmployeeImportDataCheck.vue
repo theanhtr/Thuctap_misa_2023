@@ -123,9 +123,6 @@ export default {
      * @author: TTANH (25/07/2023)
      */
     async countRecordValidate() {
-      this.modelValue.validRecord = 0;
-      this.modelValue.invalidRecord = 0;
-
       const res = await EmployeeService.checkDataExcelFilter({
         pageSize: 99999999,
         pageNumber: 1,
